@@ -1,3 +1,9 @@
 from django.contrib import admin
+from wishlist.models import Wishlist
 
-# Register your models here.
+
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ('id', 'creator', 'title', 'updated_at','reserved_by', 'is_completed')
+    list_filter = ('creator__email', 'is_completed', )
+    search_fields = ('creator__email', 'title', 'description', 'reserved_by', )
