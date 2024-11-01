@@ -2,12 +2,22 @@
   --jumbotron-padding-y: 3rem;
 }
 
+/* Фон с бантиками для всего сайта */
+body {
+  background-image: url("../images/bow-pattern.png"); /* Проверьте, что путь к изображению корректен */
+  background-repeat: repeat;
+  background-size: 50px 50px; /* Размер бантиков */
+}
+
 .jumbotron {
   padding-top: var(--jumbotron-padding-y);
   padding-bottom: var(--jumbotron-padding-y);
   margin-bottom: 0;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8); /* Белый полупрозрачный фон */
+  border-radius: 8px; /* Округлённые углы */
+  color: #333; /* Контрастный цвет для текста */
 }
+
 @media (min-width: 768px) {
   .jumbotron {
     padding-top: calc(var(--jumbotron-padding-y) * 2);
@@ -36,4 +46,6 @@ footer p {
   margin-bottom: .25rem;
 }
 
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}

@@ -24,6 +24,7 @@ class Wishlist(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name='признак выполнения')
     reserved_by = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='признак резервации юзером',
                                     related_name='reserved_wishlists', **NULLABLE)
+    is_active = models.BooleanField(default=True, verbose_name='признак активности')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='время обновления')
 
