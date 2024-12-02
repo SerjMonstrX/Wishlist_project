@@ -1,20 +1,18 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from users.views import RegisterView, CustomLoginView, VerifyEmailView, PasswordResetView, PasswordResetDoneView, \
+    UserListView, toggle_user_activity, UserUpdateView
+from django.contrib.auth.views import LogoutView
 
-from users.apps import UsersConfig
-from users.views import UsersListAPIView, UserCreateAPIView, UserRetrieveAPIView, UserUpdateAPIView, \
-    UserDestroyAPIView
-
-
-app_name = UsersConfig.name
+app_name = 'users'
 
 urlpatterns = [
-    path('user_list/', UsersListAPIView.as_view(), name='user_list'),
-    path('create/', UserCreateAPIView.as_view(), name='user_create'),
-    path('<int:pk>/', UserRetrieveAPIView.as_view(), name='user_detail'),
-    path('<int:pk>/update/', UserUpdateAPIView.as_view(), name='user_update'),
-    path('<int:pk>/delete/', UserDestroyAPIView.as_view(), name='user_delete'),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('edit/<int:pk>/', UserUpdateView.as_view(), name='user_edit'),
+    path('verify_email/<int:pk>/<str:token>/', VerifyEmailView.as_view(), name='verify_email'),
+    path('reset_password/', PasswordResetView.as_view(), name='password_reset'),
+    path('reset_password/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('users_list/', UserListView.as_view(), name='users_list'),
+    path('toggle-user-activity/<int:user_id>/', toggle_user_activity, name='toggle_user_activity'),
 ]

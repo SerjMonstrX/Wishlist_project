@@ -627,6 +627,16 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "pytils"
+version = "0.4.1"
+description = "Russian-specific string utils"
+optional = false
+python-versions = "^3.7"
+files = [
+    {file = "pytils-0.4.1.tar.gz", hash = "sha256:aa109b1bc0ec4bdb7c9768520110348d8aeb0706600e6cf641272e6850e26eab"},
+]
+
+[[package]]
 name = "pytz"
 version = "2024.2"
 description = "World timezone definitions, modern and historical"
@@ -806,4 +816,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b26010212175d439bb48e772ed4e2c8d15ea91f8631cded05f6ede5720735657"
+content-hash = "60292532c2b0dac602ca9b7c5f5af986208c195b076fb0c43ca3cf6d9549d505"

@@ -27,6 +27,8 @@ class Wishlist(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='признак активности')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='время создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='время обновления')
+    views_count = models.IntegerField(default=0, verbose_name='проосмотры')
+    slug = models.CharField(max_length=200, verbose_name='slug', **NULLABLE)
 
     def __str__(self):
         return f'Желание {self.title}'

@@ -1,8 +1,26 @@
 <div class="col-sm-4 offset-md-1 py-4">
-                    <h4 class="text-white">Меню</h4>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'wishlist:main' %}" class="text-white">Главная</a></li>
-                        <li><a href="{% url 'wishlist:main' %}" class="text-white">Моя страница</a></li>
-                        <li><a href="{% url 'wishlist:main' %}" class="text-white">Друзья</a></li>
-                    </ul>
-                </div>
+    <h4 class="text-white">Меню</h4>
+    <ul class="list-unstyled">
+            {% if request.user.is_authenticated %}
+    <p class="text-white">Вы вошли как: {{ request.user.email }}</p>
+ <li>
+            <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-white" style="padding: 0; text-decoration: underline;">
+                    Выйти
+                </button>
+            </form>
+        </li>
+        <li><a  href="{% url 'users:user_edit' pk=request.user.pk %}" class="text-white">Редактировать
+        профиль</a></li>
+    {% endif %}
+    {% if not request.user.is_authenticated %}
+    <li><a href="{% url 'users:register' %}" class="text-white">Регистрация</a></li>
+    <li><a href="{% url 'users:login' %}" class="text-white">Вход</a></li>
+
+    {% endif %}
+        <li><a href="{% url 'wishlist:home_wishlist' %}" class="text-white">Главная</a></li>
+        <li><a href="{% url 'wishlist:personal_page_wishlist' %}" class="text-white">Моя страница</a></li>
+        <li><a href="{% url 'wishlist:home_wishlist' %}" class="text-white">Друзья</a></li>
+    </ul>
+</div>
