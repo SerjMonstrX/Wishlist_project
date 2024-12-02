@@ -1,7 +1,6 @@
-from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
-
+from django.contrib.auth.models import BaseUserManager
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -20,8 +19,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('is_moderator', True)
+        extra_fields.setdefault('is_active', True)  # Установка is_active в True для суперпользователя
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -33,9 +31,10 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(verbose_name='email', unique=True)
+    email = models.EmailField(verbose_name='почта', unique=True)
     is_moderator = models.BooleanField(default=False, verbose_name='Модератор')
-    is_active = models.BooleanField(default=True, verbose_name='Активный сотрудник')
+    is_active = models.BooleanField(default=False, verbose_name='подтвержден ли аккаунт')
+    verification_token = models.CharField(max_length=100, verbose_name='Токен верификации', **NULLABLE)
     objects = UserManager()
 
     class Meta:
