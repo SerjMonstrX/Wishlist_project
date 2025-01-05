@@ -1,10 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
+from users.models import User
 from wishlist.forms import WishlistForm
 from wishlist.models import Wishlist
 from wishlist.permissions import LoginANdAuthorRequiredMixin, login_and_author_required
@@ -18,8 +20,24 @@ class HomeView(ListView):
         # Получаем базовый queryset
         queryset = super().get_queryset()
 
-        # Фильтруем по активным объектам
-        queryset = queryset.filter( is_active=True).order_by('updated_at')
+        # Базовый фильтр для видимости
+        visibility_filter = [1]  # Для незалогиненных пользователей доступны только публичные желания
+
+        if self.request.user.is_authenticated:
+            # Если пользователь залогинен, добавляем фильтр для видимости или владельца
+            user = self.request.user
+            queryset = queryset.filter(
+                Q(visibility__in=[1, 2]) | Q(creator=user)
+            )
+        else:
+            # Для незалогиненных пользователей только публичные желания
+            queryset = queryset.filter(visibility__in=visibility_filter)
+
+        # Фильтруем только активные объекты
+        queryset = queryset.filter(is_active=True)
+
+        # Упорядочиваем по обновлению
+        queryset = queryset.order_by('updated_at')
 
         return queryset
 
@@ -27,15 +45,41 @@ class HomeView(ListView):
 class WishlistPersonalPage(ListView):
     model = Wishlist
     template_name = 'wishlist/personal_page_wishlist.html'
+    context_object_name = 'wishlist'
 
-    def get_queryset(self, *args, **kwargs):
-        # Получаем базовый queryset
-        queryset = super().get_queryset()
+    def get_queryset(self):
+        # Получаем параметр `user_id`, если он передан в URL
+        user_id = self.kwargs.get('user_id', None)
 
-        # Фильтруем по текущему пользователю и активным объектам
-        queryset = queryset.filter(creator=self.request.user).order_by('updated_at')
+        # Если параметр `user_id` передан, то ищем пользователя по id, иначе используем текущего пользователя
+        if user_id:
+            viewed_user = get_object_or_404(User, id=user_id)
+        else:
+            viewed_user = self.request.user
 
-        return queryset
+        # Фильтруем желания по пользователю
+        queryset = super().get_queryset().filter(creator=viewed_user)
+
+        # Если это текущий пользователь, показываем все его желания
+        if viewed_user == self.request.user:
+            # Без фильтрации по видимости
+            return queryset.order_by('updated_at')
+
+        # Если это другой пользователь, показываем только публичные и для друзей желания
+        return queryset.filter(visibility__in=[1, 2], is_active=True).order_by('updated_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id', None)
+        if user_id:
+            viewed_user = get_object_or_404(User, id=user_id)
+        else:
+            viewed_user = self.request.user
+
+        # Передаем в контекст информацию о владельце страницы
+        context['viewed_user'] = viewed_user
+        context['is_owner'] = viewed_user == self.request.user
+        return context
 
 
 class WishlistDetailView(DetailView):
@@ -98,11 +142,10 @@ class WishlistDeleteView(LoginANdAuthorRequiredMixin, DeleteView):
 @login_and_author_required
 def toggle_activity(request, pk):
     wish_item = get_object_or_404(Wishlist, pk=pk)
-    if wish_item.is_active:
-        wish_item.is_active = False
-    else:
-        wish_item.is_active = True
 
+    # Переключение активности
+    wish_item.is_active = not wish_item.is_active
     wish_item.save()
 
-    return redirect(reverse('wishlist:personal_page_wishlist'))
+    # Редирект на страницу пользователя, который создал этот элемент
+    return redirect(reverse('wishlist:personal_page_wishlist', kwargs={'user_id': wish_item.creator.id}))

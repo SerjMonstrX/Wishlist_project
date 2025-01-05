@@ -16,9 +16,9 @@
 
                 <button type="submit" class="btn btn-success">Сохранить</button>
                 {% if form.instance.pk %}
-                <a href="{% url 'wishlist:personal_page_wishlist' %}">Назад к моей странице</a>
+        <a href="{% url 'wishlist:personal_page_wishlist' user_id=request.user.id %}" class="text-white">Назад к моей странице</a>
                 {% else %}
-                <a href="{% url 'wishlist:personal_page_wishlist' %}">Назад к моей странице</a>
+<a href="{% url 'wishlist:personal_page_wishlist' user_id=request.user.id %}" class="text-white">Назад к моей странице</a>
                 {% endif %}
             </form>
         </div>

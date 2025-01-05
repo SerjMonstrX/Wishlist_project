@@ -7,7 +7,7 @@ app_name = WishlistConfig.name
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home_wishlist'),
-    path('list/', WishlistPersonalPage.as_view(), name='personal_page_wishlist'),
+    path('list/<int:user_id>/', WishlistPersonalPage.as_view(), name='personal_page_wishlist'),
     path('detail/<int:pk>/', WishlistDetailView.as_view(), name='detail_wishlist'),
     path('create/', WishlistCreateView.as_view(), name='create_wishlist'),
     path('update/<int:pk>/', WishlistUpdateView.as_view(), name='update_wishlist'),

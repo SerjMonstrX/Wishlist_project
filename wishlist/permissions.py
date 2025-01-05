@@ -10,8 +10,8 @@ class LoginANdAuthorRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
     def test_func(self):
         """Функция для проверки является ли пользователь автором рассылки"""
-        mailing = self.get_object()
-        return self.request.user == mailing.user
+        wishlist = self.get_object()
+        return self.request.user == wishlist.creator
 
 
 from django.core.exceptions import PermissionDenied

@@ -20,6 +20,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)  # Установка is_active в True для суперпользователя
+        extra_fields.setdefault('is_moderator', True)  # Установка is_moderator в True для суперпользователя
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -28,6 +29,10 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+    @staticmethod
+    def make_random_password():
+        new_pass = 'Sergo12342'
+        return new_pass
 
 class User(AbstractUser):
     username = None

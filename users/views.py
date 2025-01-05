@@ -36,7 +36,7 @@ class RegisterView(CreateView):
 
         # Отправляем письмо для верификации
         subject = 'Подтверждение регистрации'
-        message = (f'Пройдите по ссылке для активации аккаунта {verify_url}')
+        message = f'Пройдите по ссылке для активации аккаунта {verify_url}'
         send_mail(subject, message, None, [user.email])
 
         return super().form_valid(form)
@@ -87,7 +87,7 @@ class PasswordResetView(FormView):
 
             # Отправляем письмо с новым паролем
             subject = 'Сброс пароля'
-            message = (f'Ваш новый пароль {new_password}')
+            message = f'Ваш новый пароль {new_password}'
             send_mail(subject, message, None, [user.email], html_message=None)
 
             messages.success(self.request, 'Новый пароль отправлен на ваш email.')

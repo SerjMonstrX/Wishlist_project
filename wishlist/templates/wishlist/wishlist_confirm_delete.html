@@ -7,9 +7,10 @@
             <form method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Да, удалить</button>
-                <a href="{% url 'wishlist:list_wishlist' %}" class="btn btn-secondary">Отмена</a>
+                <a href="{% url 'wishlist:personal_page_wishlist' user_id=request.user.id %}" class="text-white">Моя
+                    страница</a>
             </form>
         </div>
     </div>
 </div>
-            {% endblock %}
+{% endblock %}
