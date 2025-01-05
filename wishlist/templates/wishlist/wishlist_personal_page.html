@@ -1,0 +1,46 @@
+{% extends 'wishlist/base.html' %}
+{% block content %}
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 220px;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-img-top img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+</style>
+{% for object in object_list %}
+
+<div class="col-md-4">
+    <div class="card mb-4 box-shadow">
+        <img class="card-img-top" src="{{ object.image.url }}" alt="{{ object.name }}">
+        <div class="card-body">
+            <p class="card-text"> {{ object|title }}.</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'wishlist:detail_wishlist' pk=object.pk %}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                    <a href="{% url 'wishlist:update_wishlist' pk=object.pk %}"
+                       class="btn btn-sm btn-outline-secondary">Изменить</a>
+                    <a href="{% url 'wishlist:delete_wishlist' pk=object.pk %}"
+                       class="btn btn-sm btn-outline-danger">Удалить</a>
+                </div>
+
+            </div>
+            {% if object.is_active %}
+                <a href="{% url 'wishlist:toggle_activity_wishlist' pk=object.pk %}" class="btn btn-warning">Деактивировать</a>
+            {% else %}
+                <a href="{% url 'wishlist:toggle_activity_wishlist' pk=object.pk %}" class="btn btn-success">Активировать</a>
+            {% endif %}
+            <small class="text-muted">Обновлено {{ object.updated_at }}</small>
+        </div>
+    </div>
+</div>
+{% endfor %}
+            {% endblock %}
